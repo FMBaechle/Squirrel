@@ -235,9 +235,11 @@ label.f{display:grid;gap:6px;font-size:12.5px;font-weight:700;color:var(--muted)
 .sh-head h2{font-family:var(--f-display);font-size:17px;margin:0;font-weight:700}
 .sh-head .txt-btn:first-child{justify-self:start;color:var(--muted)}
 .sh-head .txt-btn:last-child{justify-self:end}
-.sh-body{overflow-y:auto;padding:4px 16px 12px;display:grid;gap:12px;flex:1;min-height:0;align-content:start}
+.sh-body{overflow-y:auto;padding:4px 16px 12px;display:grid;gap:10px;flex:1;min-height:0;align-content:start;grid-auto-rows:max-content}
+/* Zeilen mit horizontalem Scrollen (Tags, Vorlagen) dürfen nicht auf 0 Höhe schrumpfen */
+.sh-body>.chips.scroll{min-height:34px}
 .sh-foot{flex:none;padding:8px 12px 12px;border-top:1px solid var(--line);background:var(--bg)}
-.amount{display:flex;align-items:baseline;justify-content:center;gap:6px;font-family:var(--f-display);font-weight:700;font-size:52px;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.05;padding:2px 0}
+.amount{display:flex;align-items:baseline;justify-content:center;gap:6px;font-family:var(--f-display);font-weight:700;font-size:44px;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.05;padding:0}
 .amount em{font-style:normal;font-size:28px;color:var(--muted)}
 .amount .ph{color:var(--line)}
 .amount.shake{animation:shake .35s}
@@ -248,8 +250,8 @@ label.f{display:grid;gap:6px;font-size:12.5px;font-weight:700;color:var(--muted)
 .cat-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
 .cat-grid::-webkit-scrollbar{display:none}
 .cat-grid.err .cb{animation:shake .35s}
-.cb{display:grid;justify-items:center;gap:4px;padding:8px 2px 7px;border-radius:14px;font-size:10.5px;letter-spacing:-.01em;font-weight:700;border:1.5px solid var(--line);background:var(--surface);min-width:0}
-.cb .ci{width:34px;height:34px;font-size:17px;border-radius:11px}
+.cb{display:grid;justify-items:center;gap:3px;padding:6px 2px 5px;border-radius:14px;font-size:10.5px;letter-spacing:-.01em;font-weight:700;border:1.5px solid var(--line);background:var(--surface);min-width:0}
+.cb .ci{width:30px;height:30px;font-size:16px;border-radius:10px}
 .cb span:last-child{max-width:100%;text-align:center;line-height:1.15;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word;padding-inline:2px}
 .cb.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 14%,var(--surface))}
 .tpl{flex:none;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px 0 8px;border-radius:12px;background:var(--surface);border:1px dashed var(--line);font-size:13px;font-weight:600;white-space:nowrap}
@@ -261,7 +263,7 @@ label.f{display:grid;gap:6px;font-size:12.5px;font-weight:700;color:var(--muted)
 .recnote .i{width:16px;height:16px}
 .recnote button{margin-left:auto;font-weight:800;text-decoration:underline}
 .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.keypad button{height:50px;border-radius:13px;background:var(--surface);font-family:var(--f-display);font-size:23px;font-weight:600;display:grid;place-items:center;box-shadow:0 1px 0 var(--line)}
+.keypad button{height:46px;border-radius:13px;background:var(--surface);font-family:var(--f-display);font-size:23px;font-weight:600;display:grid;place-items:center;box-shadow:0 1px 0 var(--line)}
 .keypad button:active{background:var(--surface-2);transform:scale(.97)}
 .sh-actions{display:flex;gap:8px;margin-top:8px}
 .sh-actions .primary{flex:1}
@@ -298,3 +300,20 @@ form.connect{display:grid;gap:12px;padding:14px}
 .row .btn.sm{height:36px;padding:0 14px}
 #syncInfo{white-space:normal}
 @media (max-width:370px){.brand{font-size:0;gap:0}.seg button{padding:6px 11px}}
+
+/* Sync-Status nur als Icon */
+.syncdot{position:relative;width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}
+.syncdot.warn{background:color-mix(in srgb,var(--warn) 16%,var(--surface));color:var(--warn)}
+.syncdot .i{width:19px;height:19px}
+.syncdot.spin .i{animation:spin 1.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.syncdot b{position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--warn);color:#fff;font-size:10.5px;line-height:17px;font-weight:800;text-align:center}
+/* Kleine Bildschirme (z. B. Safari mit Leisten): Eingabe kompakter */
+@media (max-height:760px){
+  .keypad button{height:40px;font-size:21px}
+  .amount{font-size:38px}
+  .amount em{font-size:24px}
+  .sh-body{gap:8px}
+  .sh-actions{margin-top:6px}
+  .sh-actions .btn{height:44px}
+}

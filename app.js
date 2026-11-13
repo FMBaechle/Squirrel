@@ -205,7 +205,7 @@ function statusInfo(){
   if(n)return {cls:'',icon:I.sync,text:`${n} ausstehend`};
   return null;
 }
-function statusPill(){const s=statusInfo();return s?`<button class="offpill ${s.cls}" data-act="syncNow" title="${esc(lastErr||'Jetzt synchronisieren')}">${s.icon}${s.text}</button>`:''}
+function statusPill(){const s=statusInfo();if(!s)return '';const n=OUT.length;return `<button class="syncdot ${s.cls} ${syncing?'spin':''}" data-act="syncNow" title="${esc(lastErr||s.text)}" aria-label="${esc(s.text)}">${s.icon}${n&&!syncing?`<b>${n>99?'99+':n}</b>`:''}</button>`}
 function updateStatus(){document.querySelectorAll('[data-slot="status"]').forEach(el=>el.innerHTML=statusPill());if(S.view==='set'&&!sheetKind){const b=$('#syncInfo');if(b)b.innerHTML=syncInfoHTML()}}
 const brand=()=>`<div class="brand"><img src="icons/icon.svg" alt="" width="24" height="24">Squirrel</div>`;
 
@@ -517,9 +517,9 @@ function entryHTML(){
     <div class="amount" id="amt" aria-live="polite"></div>
     <div class="chips date-row" id="dateRow"></div>
     <div class="cat-grid" id="catGrid" role="radiogroup" aria-label="Kategorie"></div>
+    <div class="chips scroll" id="tagRow" aria-label="Tags"></div>
     <input class="inp" id="eTitle" maxlength="60" autocomplete="off" enterkeyhint="done" value="${esc(E.title)}">
     <div class="chips scroll sugg" id="sugg"></div>
-    <div class="chips scroll" id="tagRow" aria-label="Tags"></div>
     <button class="more-toggle" data-act="more" id="moreBtn"></button>
     <div id="more" ${E.more?'':'hidden'}><textarea class="inp" id="eNote" placeholder="Notiz (optional)" maxlength="200">${esc(E.note)}</textarea></div>
   </div>

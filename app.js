@@ -49,6 +49,7 @@ const I={
   cloudoff:'<svg class="i" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M8 7.5A5 5 0 0116.6 9 4 4 0 0119 16.5M17 18H7a4 4 0 01-1.6-7.7"/></svg>',
   sync:'<svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 00-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0014.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg>',
   warn:'<svg class="i" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17v.5"/></svg>',
+  moon:'<svg class="i" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/></svg>',
   plus:'<svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
 };
 const COLORS=['#2F9D6B','#E0773A','#5867D6','#2496B5','#8A5CC9','#CC4F8E','#B9852F','#D2483C','#2F8F86','#7D8791','#6C9A2E','#C9603F'];
@@ -456,12 +457,23 @@ function renderSet(v){
   <section class="group">
     <h2 style="margin-bottom:10px">App</h2>
     <ul class="rows">
+      <li><div class="row"><span class="ci" style="--c:#5867D6">${I.moon}</span><span class="row-main"><b>Dunkler Modus</b><small>${themeIsDark()?'Dunkle Darstellung':'Helle Darstellung'}${themeSaved()?'':' · folgt dem Gerät'}</small></span><button class="switch" role="switch" data-act="theme" aria-checked="${themeIsDark()}" aria-label="Dunkler Modus"></button></div></li>
       <li><div class="homeprev"><img class="appicon" src="icons/icon.svg" alt="App-Icon Squirrel"><p><b>${standalone?'Squirrel ist installiert':'Auf den Homescreen legen'}</b>${standalone?'Startet ohne Browserleiste und funktioniert offline.':installEvt?'Installiere Squirrel als App.':'iPhone: in Safari auf Teilen tippen, dann „Zum Home-Bildschirm“.'}</p>${installEvt&&!standalone?`<button class="btn sm primary" data-act="install">Installieren</button>`:''}</div></li>
       <li><button class="row" data-act="csv"><span class="ci" style="--c:#5867D6">${I.dl}</span><span class="row-main"><b>Als CSV exportieren</b><small>${S.tx.length} Buchungen, für Excel oder Steuer</small></span>${I.chev}</button></li>
     </ul>
   </section>
   <p class="demo-note">Squirrel · Version ${window.SQUIRREL_VERSION||''}</p>`;
 }
+
+/* Darstellung */
+const darkMQ=window.matchMedia('(prefers-color-scheme: dark)');
+function themeSaved(){try{const t=localStorage.getItem('squirrel-theme');return t==='dark'||t==='light'?t:null}catch(e){return null}}
+const themeIsDark=()=>{const t=themeSaved();return t?t==='dark':darkMQ.matches};
+function applyTheme(){
+  const t=themeSaved();if(t)document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme');
+  const col=themeIsDark()?'#0E1412':'#F8FAF7';document.querySelectorAll('meta[name="theme-color"]').forEach(m=>{m.setAttribute('content',col);m.removeAttribute('media')});
+}
+darkMQ.addEventListener?.('change',()=>{if(!themeSaved()){applyTheme();if(S.view==='set')refresh()}});
 
 /* ---------- Sheets (Overlays) ---------- */
 let sheetKind=null;
@@ -708,6 +720,7 @@ const A={
   dlCSV:()=>{const blob=new Blob(['﻿'+csvText()],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`squirrel-ausgaben-${TODAY_ISO}.csv`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)},
   disconnect:()=>{const old={...CFG};CFG={url:'',token:'',lastSync:0};persist();render();toast('Verbindung getrennt',()=>{CFG=old;persist();render()})},
   install:async()=>{if(!installEvt)return;installEvt.prompt();await installEvt.userChoice;installEvt=null;render()},
+  theme:()=>{const next=themeIsDark()?'light':'dark';try{localStorage.setItem('squirrel-theme',next)}catch(e){}applyTheme();refresh()},
   undo:()=>{const el=$('#toast');const f=el._undo;el.classList.remove('show');el._undo=null;if(f)f()},
 };
 document.addEventListener('click',e=>{
@@ -755,6 +768,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=
 
 /* ---------- Start ---------- */
 async function boot(){
+  applyTheme();
   try{DB=await idb()}catch(e){DB=null}
   const [data,out,cfg]=await Promise.all([idbGet('data'),idbGet('outbox'),idbGet('cfg')]);
   if(data&&data.cats){S.cats=data.cats;S.tags=data.tags||[];S.rec=data.rec||[];S.tx=data.tx||[]}

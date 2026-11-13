@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Squirrel</title>
+<meta name="description" content="Ausgaben schnell erfassen und auswerten – offline-fähig, mit Google Sheet als Datenbasis.">
+<meta name="theme-color" content="#F8FAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1412" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Squirrel">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="app.css">
+<script>window.SQUIRREL_VERSION='1.0.0'</script>
+</head>
+<body>
+<div class="app" id="view" lang="de"></div>
+
+<nav class="tabbar" aria-label="Hauptnavigation"><div class="tabbar-in">
+  <button class="tab" data-act="tab" data-v="track"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Ausgaben</span></button>
+  <div class="fab-slot"><button class="fab" data-act="add" aria-label="Neue Ausgabe erfassen"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>
+  <button class="tab" data-act="tab" data-v="ana"><svg class="i" viewBox="0 0 24 24"><path d="M5 20v-9M12 20V4M19 20v-6"/></svg><span>Analyse</span></button>
+</div></nav>
+
+<div class="scrim" id="scrim" hidden></div>
+<section class="sheet" lang="de" id="sheet" role="dialog" aria-modal="true" aria-label="Eingabe" hidden></section>
+<div class="toast" id="toast" role="status"></div>
+<script src="app.js" defer></script>
+</body>
+</html>

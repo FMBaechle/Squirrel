@@ -742,6 +742,9 @@ document.addEventListener('keydown',e=>{
   else if(e.key===','||e.key==='.'){key(',');e.preventDefault()}
   else if(e.key==='Backspace'){key('back');e.preventDefault()}
 });
+/* Zoomen per Zwei-Finger-Geste unterbinden (iOS ignoriert user-scalable=no teilweise) */
+['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
+document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
 window.addEventListener('online',()=>{updateStatus();scheduleSync(300)});
 window.addEventListener('offline',updateStatus);
 document.addEventListener('visibilitychange',()=>{
